@@ -1,6 +1,6 @@
 set -e
 
-choices=("1) Hyprland Config" "2) Waybar" "3) All" "4) Delete Backup Dir")
+choices=("1) Hyprland Config" "2) Waybar" "3) All" "4) Recover from backup" "5) Delete Backup Dir")
 
 echo "What do you want to install ?"
 
@@ -9,7 +9,7 @@ for choice in "${choices[@]}"; do
 done
 
 read -r u_choice
-while [[ "$u_choice" != "1" && "$u_choice" != "2" && "$u_choice" != "3" && "$u_choice" != "4" ]]; do
+while [[ "$u_choice" != "1" && "$u_choice" != "2" && "$u_choice" != "3" && "$u_choice" != "4" && "$u_choice" != "5" ]]; do
   echo "Please choose 1, 2 or 3."
   read -r u_choice
 done
@@ -26,7 +26,18 @@ if [ $u_choice == 3 ]; then
     configs=(hypr waybar)
 fi
 
+last_backup="ls -td ./.backup/*/ | head -n 1"
+
 if [ $u_choice == 4 ]; then
+    rm -rf $HOME/.config/hypr
+    rm -rf $HOME/.config/waybar 
+    mv `ls -td $HOME/.backup* | head -1`/** $HOME/.config/
+    rm -rf `ls -td $HOME/.backup* | head -1`
+    echo "Replace by backup dir"
+    exit 0
+fi
+
+if [ $u_choice == 5 ]; then
     rm -rf $HOME/.backup_config**
     echo "All Backup Dir has been deleted."
     exit 1
